@@ -7,7 +7,7 @@ import pygame
 
 
 
-# Activation function for the neural network
+# Activation function for the neural network OUTPUTS only
 def toggle(x):
     return 0 if x <= 0 else 1
 
