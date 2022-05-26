@@ -61,9 +61,9 @@ def eval_genomes(genomes, config):
             # Put our input information through the neural network (fwd propogation).
             nnOutput = net.activate(ob)
 
-            # Edit our output (2 output nodes) to be a part of a 12-index list.
+            # Edit our output (3 output nodes) to be a part of a 12-index list.
             # Each of these 12 indeces corresponds to a button on the controller.
-            # Mario is able to jump and move to the right. That's it.
+            # Mario is able to jump, sprint, and move to the right. That's it.
             nnOutput = [toggle(nnOutput[0]), 0, 0, 0, 0, 0, 0, toggle(nnOutput[1]), toggle(nnOutput[2]), 0, 0, 0]
             
             # nnOutput = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
@@ -73,16 +73,18 @@ def eval_genomes(genomes, config):
             ob, rew, done, info = env.step(nnOutput)
 
             # Store the cumulative reward of this run. We will add it to our
-            #  mario X-value at the end of the run, to calculate fitness.
+            #  fitness at the end of the run.
             reward_bag += rew
 
             # Read Mario's X position from the emulator
             current_x = info['xscrollLo']
-
+            
+            # Check current X value against last frame's X value...
             if not abs(current_x - prev_frame_x) > 1:
-                # If mario is farther now than he ever was (during this run only)...
+                # If mario is farther now than he was last frame...
                 if current_x > prev_frame_x:
                     prev_frame_x = current_x
+                    # 2 'points' for each pixel to the right that he travels
                     reward_bag += 2
                     # Reset his frame limit counter, since he is improving on his X-position.
                     counter = 0
@@ -97,8 +99,7 @@ def eval_genomes(genomes, config):
             if done or counter >= 180:
                 # Conclude his turn, end the loop.
                 done = True
-                # This genome's fitness is our rewards from coins, score, etc. 
-                #  added to our X-value.
+                # This genome's fitness is our reward from X value
                 genome.fitness = reward_bag
                 # print(f'Genome ID: {genome_id}\t\tFitness: {genome.fitness}')
 
@@ -148,5 +149,5 @@ if __name__ == '__main__':
 
     # After it's all over, once we have a 'winner' (highest fitness genome), 
     #  save that genome's configuration to a pickle file.
-    with open('winner.pkl', 'wb') as output:
-        pickle.dump(winner, output, 1)
+    # with open('winner.pkl', 'wb') as output:
+    #     pickle.dump(winner, output, 1)
