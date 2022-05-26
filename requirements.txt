@@ -1,0 +1,7 @@
+gym_retro==0.8.0
+neat==0.4.1
+neat_python==0.92
+numpy==1.21.6
+opencv_python==4.2.0.34
+pygame==2.1.2
+retro==2.9.0

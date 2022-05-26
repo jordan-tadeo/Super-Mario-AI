@@ -1,0 +1,23 @@
+{
+  "done": {
+    "variables": {
+      "lives": {
+        "op": "equal",
+        "reference": -1
+      }
+    }
+  },
+  "reward": {
+    "variables": {
+      "xscrollLo": {
+        "reward": 0
+      },
+      "coins": {
+        "reward": 0
+      },
+      "score": {
+        "reward": 0.0
+      }
+    }
+  }
+}
