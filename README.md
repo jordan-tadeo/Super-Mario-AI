@@ -1,4 +1,4 @@
-# Super-Mario-AI
+# Super-Mario-AI (Python 3.7 ONLY)
 Implementation of N.E.A.T. algorithm to teach a neural network to play Mario.
 
 In its current state, this AI has not been able to beat level 1 - 1. If you think
