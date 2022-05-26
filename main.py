@@ -61,9 +61,9 @@ def eval_genomes(genomes, config):
             # Put our input information through the neural network (fwd propogation).
             nnOutput = net.activate(ob)
 
-            # Edit our output (2 output nodes) to be a part of a 12-index list.
+            # Edit our output (3 output nodes) to be a part of a 12-index list.
             # Each of these 12 indeces corresponds to a button on the controller.
-            # Mario is able to jump and move to the right. That's it.
+            # Mario is able to jump, sprint, and move to the right. That's it.
             nnOutput = [toggle(nnOutput[0]), 0, 0, 0, 0, 0, 0, toggle(nnOutput[1]), toggle(nnOutput[2]), 0, 0, 0]
             
             # nnOutput = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
@@ -73,16 +73,20 @@ def eval_genomes(genomes, config):
             ob, rew, done, info = env.step(nnOutput)
 
             # Store the cumulative reward of this run. We will add it to our
-            #  mario X-value at the end of the run, to calculate fitness.
+            #  genome's fitness at the end of the run.
             reward_bag += rew
 
             # Read Mario's X position from the emulator
             current_x = info['xscrollLo']
-
+            
+            # Since the address at 'xscrollLo' in the emulator is not just a cumulative running
+            #  count of Mario's x value, we have to check against the previous frame to
+            #  see if Mario is making progress on the X axis...
             if not abs(current_x - prev_frame_x) > 1:
-                # If mario is farther now than he ever was (during this run only)...
+                # If mario is farther now than he was last frame...
                 if current_x > prev_frame_x:
                     prev_frame_x = current_x
+                    # 2 'points' per pixel traveled to the right
                     reward_bag += 2
                     # Reset his frame limit counter, since he is improving on his X-position.
                     counter = 0
@@ -93,12 +97,11 @@ def eval_genomes(genomes, config):
             else:
                 prev_frame_x = current_x
 
-            # If Mario hasnt moved further to the right within the last 90 frames...
+            # If Mario hasnt moved further to the right within the last 180 frames...
             if done or counter >= 180:
                 # Conclude his turn, end the loop.
                 done = True
-                # This genome's fitness is our rewards from coins, score, etc. 
-                #  added to our X-value.
+                # This genome's fitness is our rewards from X value increase only.
                 genome.fitness = reward_bag
                 # print(f'Genome ID: {genome_id}\t\tFitness: {genome.fitness}')
 
@@ -148,5 +151,5 @@ if __name__ == '__main__':
 
     # After it's all over, once we have a 'winner' (highest fitness genome), 
     #  save that genome's configuration to a pickle file.
-    with open('winner.pkl', 'wb') as output:
-        pickle.dump(winner, output, 1)
+    # with open('winner.pkl', 'wb') as output:
+        # pickle.dump(winner, output, 1)
