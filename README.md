@@ -1,6 +1,5 @@
-# Super-Mario-AI (Python 3.7 ONLY)
-Implementation of N.E.A.T. algorithm to teach a neural network to play Mario.
+# Super-Mario-AI (Python 3.7)
+Implementation of N.E.A.T. algorithm to teach a neural network to play Super Mario Bros.
 
-In its current state, this AI has not been able to beat level 1 - 1. If you think
-you can get it to learn faster or play better, be my guest! Just make sure to
-let me know if it worked.
+# Installation
+You will need to run a python 3.7 virtual environment in order for the dependencies to be installed and used properly.
